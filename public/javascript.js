@@ -2,14 +2,14 @@ $(document).ready(function(){
 	var socket, currentUser, dx, dy;
 
 	currentUser = {};
-	dx = 0.08;
-	dy = 0.08;
+	dx = 0.01;
+	dy = 0.01;
 
 	function socketConnected(){
 		currentUser.name = window.prompt("Enter username...");
 		$('title').html(currentUser.name);
 
-		socket.emit('user-joined', currentUser.name);		
+		socket.emit('user-joined', currentUser.name);
 	}
 
 	function userJoined(allUsers){
@@ -19,9 +19,11 @@ $(document).ready(function(){
 		var allKeys = Object.keys(allUsers);
 		for(i = 0; i < allKeys.length; i++){
 			var user = allUsers[allKeys[i]];
-			
+
 			var tank = $('<div />').html($('#tankTemplate').html()).addClass("tank");
 			tank.find('span[purpose=name]').html(user.name).attr('name', user.name);
+			if(user.x<10) user.x=10;
+			if(user.y<10) user.y=10;
 
 			tank.css({
 				top: user.y + "%",
@@ -39,6 +41,9 @@ $(document).ready(function(){
 			}
 
 			$('#main').append(tank);
+			$('.tank').attr('id','myTank');
+            $('html,body').animate({scrollTop: $('#myTank').offset().top}, 0);
+			$('html,body').animate({scrollLeft: $('#myTank').offset().left}, 0);
 		}
 	}
 
@@ -54,7 +59,7 @@ $(document).ready(function(){
 				if(user.name === currentUser.name){
 					alert("Game over");
 				}
-			}, 2000);				
+			}, 2000);
 		}
 	}
 
@@ -98,7 +103,7 @@ $(document).ready(function(){
 				}
 				else if(currentUser.d === 's'){
 					deltaY = dy;
-				} 
+				}
 
 				if(currentUser.x + deltaX <= 90 && currentUser.x + deltaX >= 0){
 					currentUser.x += deltaX;
@@ -124,16 +129,16 @@ $(document).ready(function(){
 				}
 				else if(currentUser.d === 's'){
 					deltaY = dy;
-				} 
+				}
 
 				if(currentUser.x - deltaX <= 90 && currentUser.x - deltaX >= 0){
 					currentUser.x -= deltaX;
-					window.scrollBy(-100*deltaX,0);
+					window.scrollBy(deltaX,0);
 				}
 
 				if(currentUser.y - deltaY <= 80 && currentUser.y - deltaY >= 0){
 					currentUser.y -= deltaY;
-					window.scrollBy(0,-100*deltaY);
+					window.scrollBy(0,deltaY);
 				}
 			 	break;
 			case 97:
@@ -149,7 +154,7 @@ $(document).ready(function(){
 				}
 				else if(currentUser.d === 's'){
 					currentUser.d = 'e';
-				} 
+				}
 				break;
 			case 100:
 				currentUser.action = 'reposition';
@@ -164,7 +169,7 @@ $(document).ready(function(){
 				}
 				else if(currentUser.d === 's'){
 					currentUser.d = 'w';
-				} 
+				}
 				break;
 			default:
 				break;
@@ -188,4 +193,4 @@ $(document).ready(function(){
 
 	// Call Init
 	Init();
-}); 
+});

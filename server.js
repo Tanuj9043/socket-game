@@ -32,7 +32,7 @@ function userJoined(user){
 		d: d
 	};
 
-	ioServer.emit('user-joined', allUsers);	
+	ioServer.emit('user-joined', allUsers);
 }
 
 function userLeft(){
@@ -71,8 +71,8 @@ ioServer.on('connection', function(socket){
 	console.log('New socket connection made');
 
 	socket.on('user-joined', userJoined);
-	socket.on('disconnect', userLeft);	
-	socket.on('msg', messageReceived);	
+	socket.on('disconnect', userLeft);
+	socket.on('msg', messageReceived);
 });
 
 httpServer.listen(8080, function(){
